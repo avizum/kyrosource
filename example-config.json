@@ -1,0 +1,14 @@
+{
+    "TOKEN": "",
+    "DEFAULT_PREFIX": "",
+    "WEATHER_API_KEY": "",
+    "BOT_INVITE_LINK": "",
+    "GOOGLE_KEY": "",
+    "DAGPI_KEY": ",
+    "DBUSER": "",
+    "DBPASSWORD": "",
+    "LAVALINKPORT": "",
+    "LAVALINKADRESS":  "",
+    "LAVALINKPASSWORD": "",
+    "LOGS_WEBHOOK": ""
+}
