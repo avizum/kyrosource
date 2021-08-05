@@ -132,7 +132,7 @@ bot = Kyro()
 #Running the Bot 
 dbuser = objects['DBUSER']
 dbpassword = objects['DBPASSWORD']
-bot.db = bot.loop.run_until_complete(asyncpg.create_pool(host='localhost', port='5432', user=dbuser, password=dbpassword, database='kyrodb'))
+bot.db = bot.loop.run_until_complete(asyncpg.create_pool(host='...', port='...', user=dbuser, password=dbpassword, database='...'))
 TOKEN = objects["TOKEN"]
 if __name__ == "__main__" :
   bot.run(TOKEN) 
