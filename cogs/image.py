@@ -540,7 +540,8 @@ class Images(commands.Cog):
             embed.set_image(url=f"attachment://{ctx.command.name}.{img.format}")
             embed.set_footer(text=f'| Requested by {ctx.author}', icon_url=ctx.author.avatar.url)
             await ctx.send(file=file, embed=embed)
-
+            
+            
     @commands.command(help='Applies a swirl effect to a profile picture')
     @commands.cooldown(1,15,commands.BucketType.user)
     async def swirl(self, ctx, user: typing.Union[discord.Member, discord.PartialEmoji, discord.Emoji] = None):
@@ -621,7 +622,7 @@ class Images(commands.Cog):
             mode = True
             text = text
         url = member.avatar.url
-        img = await dagpi.image_process(asyncdagpi.ImageFeatures.discord(), url=url, username=member.name, text=f"{text}", dark=mode)
+        img = await dagpi.image_process(asyncdagpi.ImageFeatures.discord(), url=url, username=member.name, text=text, dark=mode)
         file = discord.File(fp=img.image, filename=f'{ctx.command.name}.{img.format}')
         embed = discord.Embed(color=discord.Color.random())
         embed.set_image(url=f'attachment://{ctx.command.name}.{img.format}')
@@ -637,7 +638,7 @@ class Images(commands.Cog):
             mode = True
             text = text
         url = member.avatar.url
-        img = await dagpi.image_process(asyncdagpi.ImageFeatures.youtube(), url=url, username=member.name, text=f"{text}", dark=mode)
+        img = await dagpi.image_process(asyncdagpi.ImageFeatures.youtube(), url=url, username=member.name, text=text, dark=mode)
         file = discord.File(fp=img.image, filename=f'{ctx.command.name}.{img.format}')
         embed = discord.Embed(color=discord.Color.random())
         embed.set_image(url=f'attachment://{ctx.command.name}.{img.format}')
@@ -647,7 +648,7 @@ class Images(commands.Cog):
     @commands.cooldown(1,15,commands.BucketType.user)
     async def tweet(self, ctx, member:discord.Member, *, text ):
         url = member.avatar.url
-        img = await dagpi.image_process(asyncdagpi.ImageFeatures.tweet(), url=url, username=member.name, text=f"{text}")
+        img = await dagpi.image_process(asyncdagpi.ImageFeatures.tweet(), url=url, username=member.name, text=text)
         file = discord.File(fp=img.image, filename=f'{ctx.command.name}.{img.format}')
         embed = discord.Embed(color=discord.Color.random())
         embed.set_image(url=f'attachment://{ctx.command.name}.{img.format}')
@@ -655,10 +656,10 @@ class Images(commands.Cog):
 
     @commands.command(help='Applies a invert effect to a profile picture')
     @commands.cooldown(1,15,commands.BucketType.user)
-    async def invert(self, ctx, member:discord.Member=None):
+    async def invert(self, ctx, member:typing.Union[discord.Member, discord.PartialEmoji, discord.Emoji]=None):
         if member is None:
             member = ctx.author
-        url = member.avatar.url
+        url = await getImage(ctx. member)
         async with Processing(ctx):
             img = await dagpi.image_process(asyncdagpi.ImageFeatures.invert(), url=url)
             file = discord.File(fp=img.image, filename=f'{ctx.command.name}.{img.format}')
@@ -668,10 +669,10 @@ class Images(commands.Cog):
 
     @commands.command(help='Applies a burn effect to a profile picture')
     @commands.cooldown(1,15,commands.BucketType.user)
-    async def burn(self, ctx, member:discord.Member=None):
+    async def burn(self, ctx, member:typing.Union[discord.Member, discord.PartialEmoji, discord.Emoji]=None):
         if member is None:
             member = ctx.author
-        url = member.avatar.url
+        url = await getImage(ctx, member)
         async with Processing(ctx):
             img = await dagpi.image_process(asyncdagpi.ImageFeatures.burn(), url=url)
             file = discord.File(fp=img.image, filename=f'{ctx.command.name}.{img.format}')
@@ -682,10 +683,10 @@ class Images(commands.Cog):
 
     @commands.command(help='Applies a charcoal effect to a profile picture')
     @commands.cooldown(1,15,commands.BucketType.user)
-    async def charcoal(self, ctx, member:discord.Member=None):
+    async def charcoal(self, ctx, member:typing.Union[discord.Member, discord.PartialEmoji, discord.Emoji]=None):
         if member is None:
             member = ctx.author
-        url = member.avatar.url
+        url = await getImage(ctx, member)
         async with Processing(ctx):
             img = await dagpi.image_process(asyncdagpi.ImageFeatures.charcoal(), url=url)
             file = discord.File(fp=img.image, filename=f'{ctx.command.name}.{img.format}')
@@ -695,10 +696,10 @@ class Images(commands.Cog):
     
     @commands.command(help='Applies a sepia effect to a profile picture')
     @commands.cooldown(1,15,commands.BucketType.user)
-    async def sepia(self, ctx, member:discord.Member=None):
+    async def sepia(self, ctx, member:typing.Union[discord.Member, discord.PartialEmoji, discord.Emoji]=None):
         if member is None:
             member = ctx.author
-        url = member.avatar.url
+        url = await getImage(ctx, member)
         async with Processing(ctx):
             img = await dagpi.image_process(asyncdagpi.ImageFeatures.sepia(), url=url)
             file = discord.File(fp=img.image, filename=f'{ctx.command.name}.{img.format}')
@@ -709,10 +710,10 @@ class Images(commands.Cog):
     
     @commands.command(help='Applies a poster effect')
     @commands.cooldown(1,15,commands.BucketType.user)
-    async def poster(self, ctx, member:discord.Member=None):
+    async def poster(self, ctx, member:typing.Union[discord.Member, discord.PartialEmoji, discord.Emoji]=None):
         if member is None:
             member = ctx.author
-        url = member.avatar.url
+        url = await getImage(ctx, member)
         async with Processing(ctx):
             img = await dagpi.image_process(asyncdagpi.ImageFeatures.poster(), url=url)
             file = discord.File(fp=img.image, filename=f'{ctx.command.name}.{img.format}')
@@ -777,8 +778,90 @@ class Images(commands.Cog):
            embed.set_image(url=image_returned)
            embed.set_footer(text=f'Requested by {ctx.author.name}', icon_url=ctx.author.avatar.url)
            await ctx.send(embed=embed)
-               
 
+    @commands.command(help='Applies a pixel effect to a profile picture')
+    @commands.cooldown(1,15,commands.BucketType.user)
+    async def pixelate(self, ctx, member:typing.Union[discord.Member, discord.PartialEmoji, discord.Emoji]=None):
+        if member is None:
+            member = ctx.author
+        url = await getImage(ctx, member)
+        async with Processing(ctx):
+            img = await dagpi.image_process(asyncdagpi.ImageFeatures.mosiac(), url=url)
+            file = discord.File(fp=img.image, filename=f'{ctx.command.name}.{img.format}')
+            embed = discord.Embed(color=discord.Color.random())
+            embed.set_image(url=f'attachment://{ctx.command.name}.{img.format}')
+            await ctx.send(file=file, embed=embed)
+
+    @commands.command(help='Applies a shatter effect to a profile picture')
+    @commands.cooldown(1,15,commands.BucketType.user)
+    async def shatter(self, ctx, member:typing.Union[discord.Member, discord.PartialEmoji, discord.Emoji]=None):
+        if member is None:
+            member = ctx.author
+        url = await getImage(ctx, member)
+        async with Processing(ctx):
+            img = await dagpi.image_process(asyncdagpi.ImageFeatures.shatter(), url=url)
+            file = discord.File(fp=img.image, filename=f'{ctx.command.name}.{img.format}')
+            embed = discord.Embed(color=discord.Color.random())
+            embed.set_image(url=f'attachment://{ctx.command.name}.{img.format}')
+            await ctx.send(file=file, embed=embed)
+
+    @commands.command(help='Applies a pride effect to a profile picture')
+    @commands.cooldown(1,15,commands.BucketType.user)
+    async def pride(self, ctx, member:typing.Union[discord.Member, discord.PartialEmoji, discord.Emoji]=None):
+        if member is None:
+            member = ctx.author
+        url = await getImage(ctx, member)
+        async with Processing(ctx):
+            img = await dagpi.image_process(asyncdagpi.ImageFeatures.pride(), url=url, flag='gay')
+            file = discord.File(fp=img.image, filename=f'{ctx.command.name}.{img.format}')
+            embed = discord.Embed(color=discord.Color.random())
+            embed.set_image(url=f'attachment://{ctx.command.name}.{img.format}')
+            await ctx.send(file=file, embed=embed)
+
+    @commands.command(help='Applies a trash effect to a profile picture')
+    @commands.cooldown(1,15,commands.BucketType.user)
+    async def trash(self, ctx, member:typing.Union[discord.Member, discord.PartialEmoji, discord.Emoji]=None):
+        if member is None:
+            member = ctx.author
+        url = await getImage(ctx, member)
+        async with Processing(ctx):
+            img = await dagpi.image_process(asyncdagpi.ImageFeatures.trash(), url=url)
+            file = discord.File(fp=img.image, filename=f'{ctx.command.name}.{img.format}')
+            embed = discord.Embed(color=discord.Color.random())
+            embed.set_image(url=f'attachment://{ctx.command.name}.{img.format}')
+            await ctx.send(file=file, embed=embed)
+
+    @commands.command(name='metrix', help='Applies a metrix effect to a profile picture')
+    @commands.cooldown(1,15,commands.BucketType.user)
+    async def command_metrix(self, ctx, member:typing.Union[discord.Member, discord.PartialEmoji, discord.Emoji]=None):
+        if member is None:
+            member = ctx.author
+        url = await getImage(ctx, member)
+        async with Processing(ctx):
+            img = await dagpi.image_process(asyncdagpi.ImageFeatures.ascii(), url=url)
+            file = discord.File(fp=img.image, filename=f'{ctx.command.name}.{img.format}')
+            embed = discord.Embed(color=discord.Color.random())
+            embed.set_image(url=f'attachment://{ctx.command.name}.{img.format}')
+            await ctx.send(file=file, embed=embed)
+
+    @commands.command(name='night', help='Applies a night effect to a profile picture ')
+    @commands.cooldown(1,15,commands.BucketType.user)
+    async def command_night(self, ctx, member:typing.Union[discord.Member, discord.PartialEmoji, discord.Emoji]=None):
+        if member is None:
+            member = ctx.author
+        url = await getImage(ctx, member)
+        async with Processing(ctx):
+            img = await dagpi.image_process(asyncdagpi.ImageFeatures.night(), url=url)
+            file = discord.File(fp=img.image, filename=f'{ctx.command.name}.{img.format}')
+            embed = discord.Embed(color=discord.Color.random())
+            embed.set_image(url=f'attachment://{ctx.command.name}.{img.format}')
+            await ctx.send(file=file, embed=embed)
+    
+
+    
+
+    
+    
 
     
 
