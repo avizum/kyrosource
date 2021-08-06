@@ -669,7 +669,7 @@ class Utility(commands.Cog):
       minutes, seconds = divmod(remainder, 60)
       days, hours = divmod(hours, 24)
 
-      embed = discord.Embed(description=f'**Kyro has been up for**:\n{days}d {hours}h {minutes}m {seconds}s',  color=discord.Color.random())
+      embed = discord.Embed(description=f'**Kyro has been up for**:\n{days}d {hours}h {minutes}m {seconds}s\nOnline since: {discord.utils.format_dt(self.bot.launch_time)}',  color=discord.Color.random())
       embed.set_author(name='Uptime of Kyro', icon_url=self.bot.user.avatar.url)
       embed.set_footer(text=f'| Requested by {ctx.author.name}', icon_url=ctx.author.avatar.url)
       await ctx.send(embed=embed)
