@@ -116,7 +116,7 @@ class Owner(commands.Cog):
         if e.text is None:
             return f'```py\n{e.__class__.__name__}: {e}\n```'
         return f'```py\n{e.text}{"^":>{e.offset}}\n{e.__class__.__name__}: {e}```'
-    
+
     @commands.command(pass_context=True, name='eval')
     @commands.is_owner()
     async def _eval(self, ctx, *, body: str):
@@ -163,12 +163,11 @@ class Owner(commands.Cog):
             else:
                 self._last_result = ret
                 await ctx.trash(f'```py\n{value}{ret}\n```')
-                
+
     @commands.group(aliases=['dev'], invoke_without_command=True)
     @commands.is_owner()
     async def developer(self, ctx):
         pass
-    
 
     @developer.command()
     @commands.is_owner()
@@ -178,33 +177,32 @@ class Owner(commands.Cog):
         reactions = ['✅', '❌']
         timeout = int(20.0)
         for reaction in reactions:
-          await m.add_reaction(reaction)
-        
-        def check(reaction, user):
-          return user == ctx.author and reaction.emoji in ['✅', '❌']
-        
-        try:
-          reaction, user = await self.bot.wait_for('reaction_add', timeout=timeout, check=check)
-          if reaction.emoji == '✅':
-            await m.delete()
-            msg = await ctx.send("Okay, bot shutting down in **3** seconds!")
-            await asyncio.sleep(0.5)
-            await msg.edit(content = "Okay, bot shutting down in **2** seconds!")
-            await asyncio.sleep(0.5)
-            await msg.edit(content = "Okay, bot shutting down in **1** seconds!")
-            await msg.edit(content="**:skull_crossbones: Bot is now off and will not respond!**")
-            await self.bot.close()
-          elif reaction.emoji == '❌':
-            emb = discord.Embed(title='Aborted', color=discord.Color.blurple())
-            await m.edit(embed=emb)
-            await asyncio.sleep(5)
-            await m.delete()
-            await ctx.message.add_reaction('<a:incorrect:854800103193182249>')
-        except asyncio.TimeoutError:
-          msg = ("**You timed out :stopwatch:**")
-          await ctx.send(msg)
+            await m.add_reaction(reaction)
 
-    
+        def check(reaction, user):
+            return user == ctx.author and reaction.emoji in ['✅', '❌']
+
+        try:
+            reaction, user = await self.bot.wait_for('reaction_add', timeout=timeout, check=check)
+            if reaction.emoji == '✅':
+                await m.delete()
+                msg = await ctx.send("Okay, bot shutting down in **3** seconds!")
+                await asyncio.sleep(0.5)
+                await msg.edit(content = "Okay, bot shutting down in **2** seconds!")
+                await asyncio.sleep(0.5)
+                await msg.edit(content = "Okay, bot shutting down in **1** seconds!")
+                await msg.edit(content="**:skull_crossbones: Bot is now off and will not respond!**")
+                await self.bot.close()
+            elif reaction.emoji == '❌':
+                emb = discord.Embed(title='Aborted', color=discord.Color.blurple())
+                await m.edit(embed=emb)
+                await asyncio.sleep(5)
+                await m.delete()
+                await ctx.message.add_reaction('<a:incorrect:854800103193182249>')
+        except asyncio.TimeoutError:
+            msg = ("**You timed out :stopwatch:**")
+            await ctx.send(msg)
+
     # @commands.command(aliases=['calc'])
     # @commands.is_owner()
     # async def calculator(self, ctx):
@@ -318,7 +316,7 @@ class Owner(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
-    async def load(self, ctx, *, ext): 
+    async def load(self, ctx, *, ext):
         self.bot.load_extension(f'cogs.{ext}')
         await ctx.send(f"<:green_tick:844165352610725898> **|** Loaded Extension: **{ext}.py**")
 
@@ -339,55 +337,55 @@ class Owner(commands.Cog):
     @commands.command()
     @commands.is_owner()
     async def sync(self, ctx):
-      embed = discord.Embed(title='<a:tick:854961738439983125> Syncing..', color=0x01CFA9)
-      msg = await ctx.send(embed=embed)
-      for filename in os.listdir('./cogs'):
-        if filename.endswith('.py'):
-         self.bot.reload_extension(f'cogs.{filename[:-3]}')
-         await asyncio.sleep(0.3)
-      e = discord.Embed(title='<a:tick:854961738439983125> Syncing..', description='Syncing Utility Extensions', color=0x01CFA9)
-      await msg.edit(embed=e)
-      self.bot.reload_extension('utilities.addons.context')
-      await asyncio.sleep(1)
-      emb = discord.Embed(title=f'<a:tick:854961738439983125> Synced\nReloaded all {len(self.bot.extensions)} cogs and extensions', description='\n'.join(self.bot.extensions), color=0x01CFA9)
-      await msg.edit(embed=emb, delete_after=5)
+        embed = discord.Embed(title='<a:tick:854961738439983125> Syncing..', color=0x01CFA9)
+        msg = await ctx.send(embed=embed)
+        for filename in os.listdir('./cogs'):
+            if filename.endswith('.py'):
+                self.bot.reload_extension(f'cogs.{filename[:-3]}')
+            await asyncio.sleep(0.3)
+        e = discord.Embed(title='<a:tick:854961738439983125> Syncing..', description='Syncing Utility Extensions', color=0x01CFA9)
+        await msg.edit(embed=e)
+        self.bot.reload_extension('utilities.addons.context')
+        await asyncio.sleep(1)
+        emb = discord.Embed(title=f'<a:tick:854961738439983125> Synced\nReloaded all {len(self.bot.extensions)} cogs and extensions', description='\n'.join(self.bot.extensions), color=0x01CFA9)
+        await msg.edit(embed=emb, delete_after=5)
 
     @commands.command()
     @commands.is_owner()
     async def noprefix(self, ctx):
-     if ctx.author.id == 422854944857784322:
-      self.bot.noPrefixSomeone = not self.bot.noPrefixSomeone
-      if self.bot.noPrefixSomeone == True:
-          embed = discord.Embed(description='No prefix is now enabled!', color=discord.Color.blurple())
-      else:
-          embed = discord.Embed(description='No prefix is now disabled!', color=discord.Color.blurple())
-      await ctx.send(embed=embed)
-      
-     elif ctx.author.id == 812901193722363904:
-      self.bot.noPrefixHiro = not self.bot.noPrefixHiro
-      if self.bot.noPrefixHiro == True:
-          embed = discord.Embed(description='No prefix is now enabled!', color=discord.Color.blurple())
-      else:
-          embed = discord.Embed(description='No prefix is now disabled!', color=discord.Color.blurple())
-      await ctx.send(embed=embed)
-    
+        if ctx.author.id == 422854944857784322:
+            self.bot.noPrefixSomeone = not self.bot.noPrefixSomeone
+            if self.bot.noPrefixSomeone:
+                embed = discord.Embed(description='No prefix is now enabled!', color=discord.Color.blurple())
+            else:
+                embed = discord.Embed(description='No prefix is now disabled!', color=discord.Color.blurple())
+            await ctx.send(embed=embed)
+
+        elif ctx.author.id == 812901193722363904:
+            self.bot.noPrefixHiro = not self.bot.noPrefixHiro
+            if self.bot.noPrefixHiro:
+                embed = discord.Embed(description='No prefix is now enabled!', color=discord.Color.blurple())
+            else:
+                embed = discord.Embed(description='No prefix is now disabled!', color=discord.Color.blurple())
+            await ctx.send(embed=embed)
+
     @developer.command(name='upload')
     @commands.is_owner()
     async def photoupload(self, ctx, *, url=None):
-      async with ctx.typing():
-        bytes = None
-        if url:
-            r =  await self.bot.session.get(url)
-            if r.status == 200:
-              bytes = await r.read()
-              if bytes is None:
-                if len(file := ctx.message.attachments) > 0:
-                  bytes = await file[0].read()
-                elif len(file := ctx.message.reference.resolved.attachments) > 0:
-                  bytes = await file[0].read()
-                else:
-                  return await ctx.send("No attachment found.")
-           
+        async with ctx.typing():
+            bytes = None
+            if url:
+                r = await self.bot.session.get(url)
+                if r.status == 200:
+                    bytes = await r.read()
+                if bytes is None:
+                    if len(file := ctx.message.attachments) > 0:
+                        bytes = await file[0].read()
+                    elif len(file := ctx.message.reference.resolved.attachments) > 0:
+                        bytes = await file[0].read()
+                    else:
+                        return await ctx.send("No attachment found.")
+
         r = await self.bot.session.post("https://someone4.nothing-to-see-he.re/upload", data={"image": bytes})
         if r.status == 200:
             json = await r.json()
@@ -401,12 +399,12 @@ class Owner(commands.Cog):
     @developer.command()
     @commands.is_owner()
     async def cleanup(self, ctx, search=10):
-      await ctx.message.add_reaction("<a:loading:856812922320060416>")
-      strategy = self._basic_cleanup_strategy
-      spammers = await strategy(ctx, search)
-      deleted = sum(spammers.values())
-      messages = [f'{deleted} message{" was" if deleted == 1 else "s were"} removed.']
-      if deleted:
+        await ctx.message.add_reaction("<a:loading:856812922320060416>")
+        strategy = self._basic_cleanup_strategy
+        spammers = await strategy(ctx, search)
+        deleted = sum(spammers.values())
+        messages = [f'{deleted} message{" was" if deleted == 1 else "s were"} removed.']
+        if deleted:
             await ctx.message.remove_reaction('<a:loading:856812922320060416>', self.bot.user)
             messages.append('')
             spammers = sorted(spammers.items(), key=lambda t: t[1], reverse=True)
@@ -420,14 +418,14 @@ class Owner(commands.Cog):
     @developer.command()
     @commands.is_owner()
     async def debugmode(self, ctx):
-     self.bot.DebugMode = not self.bot.DebugMode
-     if self.bot.DebugMode == True:
-       embed = discord.Embed(description='Debug Mode has been enabled', color=discord.Color.blurple())
-     else:
-       embed = discord.Embed(description='Debug Mode has been disabled', color=discord.Color.blurple())
-     await ctx.send(embed=embed)
-        
-    @commands.command()    
+        self.bot.DebugMode = not self.bot.DebugMode
+        if self.bot.DebugMode:
+            embed = discord.Embed(description='Debug Mode has been enabled', color=discord.Color.blurple())
+        else:
+            embed = discord.Embed(description='Debug Mode has been disabled', color=discord.Color.blurple())
+        await ctx.send(embed=embed)
+
+    @commands.command()
     @commands.is_owner()
     async def gitsync(self, ctx):
         proc = await asyncio.create_subprocess_shell("git pull https://github.com/someone782/Kyro.git", stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
@@ -439,7 +437,6 @@ class Owner(commands.Cog):
         em=discord.Embed(description=f"```sh\n$git pull\n{shell}```\n", color=discord.Color.random())
         await ctx.reply(embed=em, mention_author=False)
 
-               
     @developer.command()
     @commands.is_owner()
     async def restart(self, ctx):
@@ -448,47 +445,43 @@ class Owner(commands.Cog):
         reactions = ['✅', '❌']
         timeout = int(20.0)
         for reaction in reactions:
-          await m.add_reaction(reaction)
-        
+            await m.add_reaction(reaction)
+
         def check(reaction, user):
-          return user == ctx.author and reaction.emoji in ['✅', '❌']
-        
+            return user == ctx.author and reaction.emoji in ['✅', '❌']
+
         try:
-          reaction, user = await self.bot.wait_for('reaction_add', timeout=timeout, check=check)
-          if reaction.emoji == '✅':
-            e = discord.Embed(description='<a:processing:857872778812325931> Restarting..', color=discord.Color.random())
-            await m.edit(embed=e)
-            await asyncio.sleep(2)
-            await m.delete()
-            await ctx.message.add_reaction('✅')
-            await self.bot.close()
-          elif reaction.emoji == '❌':
-            emb = discord.Embed(title='Aborted', color=discord.Color.blurple())
-            await m.edit(embed=emb)
-            await asyncio.sleep(5)
-            await m.delete()
-            await ctx.message.add_reaction('<a:incorrect:854800103193182249>')
+            reaction, user = await self.bot.wait_for('reaction_add', timeout=timeout, check=check)
+            if reaction.emoji == '✅':
+                e = discord.Embed(description='<a:processing:857872778812325931> Restarting..', color=discord.Color.random())
+                await m.edit(embed=e)
+                await asyncio.sleep(2)
+                await m.delete()
+                await ctx.message.add_reaction('✅')
+                await self.bot.close()
+            elif reaction.emoji == '❌':
+                emb = discord.Embed(title='Aborted', color=discord.Color.blurple())
+                await m.edit(embed=emb)
+                await asyncio.sleep(5)
+                await m.delete()
+                await ctx.message.add_reaction('<a:incorrect:854800103193182249>')
         except asyncio.TimeoutError:
-          msg = ("**You timed out :stopwatch:**")
-          await ctx.send(msg)
-            
-    @developer.command()
-    @commands.is_owner()
-    async def blacklist(self, ctx, member:discord.User, reason):
-        try:
-            self.bot.cache.blacklisted[member.id]
-            return await ctx.send("User Already in blacklist.")
-        except KeyError:
-            await self.bot.db.execute("INSERT INTO blacklisted (member_id, reason) VALUES ($1, $2)", member.id, reason)
-            self.bot.cache.blacklisted[member.id] = reason
-            await ctx.send(f"**<:green_tick:844165352610725898> | Successfully blacklisted `{member}` for {reason}**")
+            msg = ("**You timed out :stopwatch:**")
+            await ctx.send(msg)
 
     @developer.command()
     @commands.is_owner()
-    async def unblacklist(self, ctx, member:discord.User):
-        try:
-            self.bot.cache.blacklisted[member.id]
-        except KeyError:
+    async def blacklist(self, ctx, member: discord.User, reason):
+        if member.id in self.bot.cache.blacklisted:
+            return await ctx.send("User is already blacklisted.")
+        await self.bot.db.execute("INSERT INTO blacklisted (member_id, reason) VALUES ($1, $2)", member.id, reason)
+        self.bot.cache.blacklisted[member.id] = reason
+        await ctx.send(f"**<:green_tick:844165352610725898> | Successfully blacklisted `{member}` for {reason}**")
+
+    @developer.command()
+    @commands.is_owner()
+    async def unblacklist(self, ctx, member: discord.User):
+        if member.id not in self.bot.cache.blacklisted:
             return await ctx.send("User is not currently blacklisted.")
         await self.bot.db.execute("DELETE FROM blacklisted WHERE member_id = $1", member.id)
         self.bot.cache.blacklisted.pop(member.id)
@@ -512,53 +505,41 @@ class Owner(commands.Cog):
         reactions = ['✅', '❌']
         timeout = int(20.0)
         for reaction in reactions:
-          await m.add_reaction(reaction)
-        
-        def check(reaction, user):
-          return user == ctx.author and reaction.emoji in ['✅', '❌']
-        
-        try:
-          reaction, user = await self.bot.wait_for('reaction_add', timeout=timeout, check=check)
-          if reaction.emoji == '✅':
-              for guild in self.bot.guilds:
-                  if guild.name == guild:
-                      await guild.leave()
-              await m.delete()
-              await ctx.message.add_reaction('✅') 
-          else:
-              await m.delete()
-        except asyncio.TimeoutError:
-            await ctx.send("**You timed out :stopwatch:**") 
+            await m.add_reaction(reaction)
 
+        def check(reaction, user):
+            return user == ctx.author and reaction.emoji in ['✅', '❌']
+
+        try:
+            reaction, user = await self.bot.wait_for('reaction_add', timeout=timeout, check=check)
+            if reaction.emoji == '✅':
+                for guild in self.bot.guilds:
+                    if guild.name == guild:
+                        await guild.leave()
+                await m.delete()
+                await ctx.message.add_reaction('✅')
+            else:
+                await m.delete()
+        except asyncio.TimeoutError:
+            await ctx.send("**You timed out :stopwatch:**")
 
     @developer.command(name='as')
     @commands.is_owner()
-    async def webho(self,ctx, member: typing.Union[discord.User, discord.Member], *, text):
+    async def webho(self, ctx, member: typing.Union[discord.User, discord.Member], *, text):
         image = str(self.bot.user.avatar.url)
         async with aiohttp.ClientSession() as ses:
-             async with ses.get(str(image)) as r:
+            async with ses.get(str(image)) as r:
                 img = await r.read()
         webhooks = await ctx.channel.webhooks()
         kyro_webhook = discord.utils.get(webhooks, name="Kyro")
         if not kyro_webhook:
-                    kyro_webhook = await ctx.channel.create_webhook(
-                        name="Kyro", reason="Kyro dev-as command. Might be made public for server admins soon.",
-                        
-                        avatar=img)
+            kyro_webhook = await ctx.channel.create_webhook(
+                name="Kyro", reason="Kyro dev-as command. Might be made public for server admins soon.", avatar=img)
         await kyro_webhook.send(
                     text, username=member.display_name,
                     avatar_url=member.avatar.with_format("png").url,
                     allowed_mentions=discord.AllowedMentions.none())
 
 
-
-        
-
-    
-
-        
-        
-      
-        
 def setup(bot):
     bot.add_cog(Owner(bot))

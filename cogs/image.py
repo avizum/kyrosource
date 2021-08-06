@@ -113,7 +113,7 @@ class Images(commands.Cog):
     @commands.command(help='Sends a message a clyde')
     @commands.cooldown(1,5,commands.BucketType.user)
     async def clyde(self, ctx, *, text = None):
-        if text == None:
+        if text is None:
             return await ctx.send("**You need to provide some text ||  E  ||**")
         async with aiohttp.ClientSession() as ses:
             async with ses.get(f'https://nekobot.xyz/api/imagegen?type=clyde&text={text}') as r:
@@ -145,7 +145,7 @@ class Images(commands.Cog):
     @commands.command(help='Applies a fry effect on a profile picture')
     @commands.cooldown(1,5,commands.BucketType.user)
     async def fry(self, ctx, member: typing.Union[discord.Member, discord.PartialEmoji, discord.Emoji] = None):
-        if member == None:
+        if member is None:
             member = ctx.author
         url = await getImage(ctx, member)
         async with Processing(ctx):
@@ -159,7 +159,7 @@ class Images(commands.Cog):
     @commands.command(help='Applies a blurpify effect on a profile picture')
     @commands.cooldown(1,5,commands.BucketType.user)
     async def blurpify(self, ctx, member: typing.Union[discord.Member, discord.PartialEmoji, discord.Emoji] = None):
-        if member == None:
+        if member is None:
             member = ctx.author
         url = await getImage(ctx, member)
         async with Processing(ctx):
@@ -195,20 +195,20 @@ class Images(commands.Cog):
     @commands.command()
     @commands.cooldown(1,5,commands.BucketType.user)
     async def ohno(self,ctx,* ,text="u need text"):
-      img = Image.open("utilities/images/ohno.png")
-      draw = ImageDraw.Draw(img)
-      font = ImageFont.truetype("utilities/fonts/arial.ttf",18)
+        img = Image.open("utilities/images/ohno.png")
+        draw = ImageDraw.Draw(img)
+        font = ImageFont.truetype("utilities/fonts/arial.ttf",18)
 
-      draw.text((188,52),text, (0,0,0),font=font)
+        draw.text((188,52),text, (0,0,0),font=font)
 
-      img.save("ohnosaved.png")
-      await ctx.send(file=discord.File("ohnosaved.png"))
-      os.remove("ohnosaved.png")
+        img.save("ohnosaved.png")
+        await ctx.send(file=discord.File("ohnosaved.png"))
+        os.remove("ohnosaved.png")
 
     @commands.command(help='Slaps a member')
     @commands.cooldown(1,5,commands.BucketType.user)
     async def slap(self, ctx, member: discord.Member=None):
-        if member == None:
+        if member is None:
             return await ctx.send("**Srsly u need to provide a member for slapping ||smol brain||**")
         img = Image.open("utilities/images/slap.png")
         asset = member.avatar.with_size(128).read()
@@ -279,7 +279,7 @@ class Images(commands.Cog):
     @commands.command(help='Applies a flip effect to a profile picture')
     @commands.cooldown(1,5,commands.BucketType.user)
     async def flip(self, ctx, member: discord.Member=None):
-        if member == None:
+        if member is None:
             member = ctx.author
         img = member.avatar.with_format('png').read()
         data = BytesIO(await img)
@@ -293,7 +293,7 @@ class Images(commands.Cog):
     @commands.command(help='Show\'s a wanted poster with a profile picture')
     @commands.cooldown(1,5,commands.BucketType.user)
     async def wanted(self, ctx, member: discord.Member = None):
-      if member == None:
+      if member is None:
         member = ctx.author
       
       wanted = Image.open("utilities/images/wanted.png")
@@ -315,7 +315,7 @@ class Images(commands.Cog):
     @commands.command(help='Generates a stickbug video with your profile picture')
     @commands.cooldown(1,15,commands.BucketType.user)
     async def stickbug(self, ctx, member: discord.Member = None):
-        if member == None:
+        if member is None:
             member = ctx.author
         url = member.avatar.with_format('png')
         async with Processing(ctx):
@@ -336,7 +336,7 @@ class Images(commands.Cog):
     @commands.command(help='Generates your profile picture within a iPhone')
     @commands.cooldown(1,5,commands.BucketType.user)
     async def iphone(self, ctx, member:discord.Member = None):
-      if member == None:
+      if member is None:
         return await ctx.send("**<:red_cross:844165297538727956> | Please Provide a valid member**")
       url = await getImage(ctx, member)
       async with aiohttp.ClientSession() as ses:
@@ -353,7 +353,7 @@ class Images(commands.Cog):
     @commands.command(help='Applies a communism effect to a profile picture')
     @commands.cooldown(1,15,commands.BucketType.user)
     async def communism(self, ctx, member:typing.Union[discord.Member, discord.PartialEmoji, discord.Emoji] = None):
-        if member == None:
+        if member is None:
          member = ctx.author
         async with Processing(ctx):
             try:
@@ -370,7 +370,7 @@ class Images(commands.Cog):
     @commands.command(help='Applies a america effect to a profile picture')
     @commands.cooldown(1,15,commands.BucketType.user)
     async def america(self, ctx, member:typing.Union[discord.Member, discord.PartialEmoji, discord.Emoji] = None):
-        if member == None:
+        if member is None:
          member = ctx.author
         async with Processing(ctx):
             url = await getImage(ctx, member)
@@ -384,7 +384,7 @@ class Images(commands.Cog):
     @commands.command(help='Applies a triggered effect to a profile picture')
     @commands.cooldown(1,15,commands.BucketType.user)
     async def triggered(self, ctx, member:typing.Union[discord.Member, discord.PartialEmoji, discord.Emoji] = None):
-        if member == None:
+        if member is None:
          member = ctx.author
         async with Processing(ctx):
             url = await getImage(ctx, member)
@@ -398,7 +398,7 @@ class Images(commands.Cog):
     @commands.command(help='Applies a ultra-wide effect to a profile picture')
     @commands.cooldown(1,5,commands.BucketType.user)
     async def ultrawide(self, ctx, member :discord.Member=None):
-        if member == None:
+        if member is None:
           member = ctx.author
         image = str(member.avatar.with_format('png'))
         async with aiohttp.ClientSession() as ses:
@@ -415,7 +415,7 @@ class Images(commands.Cog):
     @commands.command(help='Applies a dramatical effect to a profile picture')
     @commands.cooldown(1,5,commands.BucketType.user)
     async def dramatical(self, ctx, member: discord.Member=None):
-        if member == None:
+        if member is None:
           member = ctx.author
         image = str(member.avatar.with_format('png'))
         async with aiohttp.ClientSession() as ses:

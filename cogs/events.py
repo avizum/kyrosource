@@ -24,20 +24,20 @@ data = file.read()
 objects = json.loads(data)
 
 class Events(commands.Cog):
-    def __init__(self,bot):
+    def __init__(self, bot):
         self.bot = bot
 
-    @commands.Cog.listener()
-    async def on_message(self, msg):
-      pass
-    
+
     @commands.Cog.listener()
     async def on_message(self, message):
-           if (message.author.bot):
-                return
-           if message.content == f"<@!{self.bot.user.id}>" or message.content == f"<@{self.bot.user.id}>":
-                prefix = self.bot.cache.prefixes[message.guild.id]["prefix"]
-                await message.channel.send(f"**<a:animated_tick:847447732623900672> Hey there! My prefix for this server is `{prefix}`!**")
+        if (message.author.bot):
+            return
+        if message.content in [
+            f"<@!{self.bot.user.id}>",
+            f"<@{self.bot.user.id}>",
+        ]:
+            prefix = self.bot.cache.prefixes[message.guild.id]["prefix"]
+            await message.channel.send(f"**<a:animated_tick:847447732623900672> Hey there! My prefix for this server is `{prefix}`!**")
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
@@ -64,7 +64,7 @@ class Events(commands.Cog):
             if cog._get_overridden_method(cog.cog_command_error) is not None:
                 return
 
-        ignored = (commands.CommandNotFound, )
+        ignored = (commands.CommandNotFound)
 
         error = getattr(error, 'original', error)
 

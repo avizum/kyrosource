@@ -75,48 +75,43 @@ class Fun(commands.Cog):
     @commands.cooldown(1,5,commands.BucketType.user)
     async def mckill(self, ctx, member: discord.Member=None):
 
-      if member == None:
-        return await ctx.send("**<:red_cross:844165297538727956> | You need to provide a member to MC Kill**")
+        if member is None:
+            return await ctx.send("**<:red_cross:844165297538727956> | You need to provide a member to MC Kill**")
 
-      choices = ['was pricked to death', 'drowned', 'experienced kinetic energy', 'hit the ground too hard', 'fell from a high place', 'fell off a ladder', ' was squashed by a falling anvil', 'went up in flames', 'burned to death', 'tried to swim in lava', 'discovered the floor was lava', 'was killed by magic', 'starved to death', 'suffocated in a wall', 'was poked to death by a sweet berry bush', 'fell out of the world', 'withered away', 'blew up', 'was killed by [Intentional Game Design]', f'didn\'t wanted to live in the same world as **{ctx.author.name}**']
-      choice = random.choice(choices)
-      await ctx.send(f'**{member}** {choice}')
+        choices = ['was pricked to death', 'drowned', 'experienced kinetic energy', 'hit the ground too hard', 'fell from a high place', 'fell off a ladder', ' was squashed by a falling anvil', 'went up in flames', 'burned to death', 'tried to swim in lava', 'discovered the floor was lava', 'was killed by magic', 'starved to death', 'suffocated in a wall', 'was poked to death by a sweet berry bush', 'fell out of the world', 'withered away', 'blew up', 'was killed by [Intentional Game Design]', f'didn\'t wanted to live in the same world as **{ctx.author.name}**']
+        choice = random.choice(choices)
+        await ctx.send(f'**{member}** {choice}')
 
     @mckill.error
     async def mckill_error(self, ctx, error):
-      if isinstance(error, commands.MemberNotFound):
-         await ctx.send("**<:red_cross:844165297538727956> | No valid member was provided!**")
-      else:
-        raise error
+        if isinstance(error, commands.MemberNotFound):
+            await ctx.send("**<:red_cross:844165297538727956> | No valid member was provided!**")
+        else:
+            raise error
 
     @commands.command(help='Show\'s a member\'s avatar')
     @commands.cooldown(1,5,commands.BucketType.user)
     async def avatar(self, ctx, member: discord.Member = None):
-        if member == None:
-          member = ctx.author
+        member = member or ctx.author
         embed = discord.Embed(title=f"{member.name}'s avatar", color=0xff0000)
         embed.set_image(url=member.avatar.url)
         await ctx.send(embed=embed)
-        
-            
 
     @commands.command(help='Makes a emoji bigger')
     @commands.cooldown(1,5,commands.BucketType.user)
     async def bigmoji(self, ctx, emoji: discord.PartialEmoji = None):
-      if emoji == None:
-        return await ctx.send("**<:red_cross:844165297538727956> | You need to provide a valid emoji!**")
-      url = str(emoji.url)
-      await ctx.send(url)
-    
+        if emoji is None:
+            return await ctx.send("**<:red_cross:844165297538727956> | You need to provide a valid emoji!**")
+        url = str(emoji.url)
+        await ctx.send(url)
+
     @bigmoji.error
     async def bigmoji_error(self, ctx, error):
-      if isinstance(error, commands.PartialEmojiConversionFailure):
-            embed = discord.Embed(description="**<:red_cross:844165297538727956> | Please Provide a valid emoji**", color=0xff0000)
-            await ctx.send(embed=embed)
-      else:
-        raise error
+        if not isinstance(error, commands.PartialEmojiConversionFailure):
+            raise error
 
-      
+        embed = discord.Embed(description="**<:red_cross:844165297538727956> | Please Provide a valid emoji**", color=0xff0000)
+        await ctx.send(embed=embed)
 
     @commands.command(help='Tells a funny joke')
     @commands.cooldown(1,5,commands.BucketType.user)
@@ -134,7 +129,7 @@ class Fun(commands.Cog):
     @commands.command(help='Writes text in ascii')
     @commands.cooldown(1,5,commands.BucketType.user)
     async def ascii(self, ctx, *, raw_text=None):
-        if raw_text == None:
+        if raw_text is None:
             return await ctx.reply("**Don't you need some text to ascii ||Hiro will be mad at you bruh||**")
         elif len(raw_text) > 13:
             return await ctx.reply("**The Text Cannot be above 13 characters coz its ascii bro!**")
@@ -163,7 +158,7 @@ class Fun(commands.Cog):
         embed=discord.Embed(
             description=f"```json\n{discord.utils.escape_markdown(raw)}```",
             color=discord.Color.random()) 
-        embed.set_author(name=f"That message if decoded is...", icon_url=ctx.author.avatar.url)
+        embed.set_author(name="That message if decoded is...", icon_url=ctx.author.avatar.url)
         embed.set_footer(text=f'Fun Fact about discord requests: {choice}')
         if len(embed.description) < 2048:
             await ctx.send(embed=embed)
@@ -173,15 +168,15 @@ class Fun(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message_delete(self, message):
-       try: 
-        snipe_message_author[message.channel.id] = message.author
-        snipe_message_content[message.channel.id] = message.content
-        await asyncio.sleep(60)
-        del snipe_message_author[message.channel.id]
-        del snipe_message_content[message.channel.id]
+        try: 
+            snipe_message_author[message.channel.id] = message.author
+            snipe_message_content[message.channel.id] = message.content
+            await asyncio.sleep(60)
+            del snipe_message_author[message.channel.id]
+            del snipe_message_content[message.channel.id]
 
-       except KeyError:
-         return
+        except KeyError:
+            return
 
     @commands.command(help='Snipes the last deleted message from the channel')
     @commands.cooldown(1,5,commands.BucketType.user)
@@ -198,27 +193,27 @@ class Fun(commands.Cog):
             del snipe_message_content[channel.id]
             del snipe_message_author[channel.id]
         except:
-            await ctx.send(f"**There is nothing to snipe!**")
+            await ctx.send("**There is nothing to snipe!**")
 
     @commands.Cog.listener()
     async def on_message_edit(self, after, before):
-      try:
-        edit_message_author[after.channel.id] = after.author
-        edit_message_content_before[after.channel.id] = after.content
-        edit_message_content_after[after.channel.id] = before.content
-        await asyncio.sleep(60)
-        del edit_message_author[after.channel.id]
-        del edit_message_content_after[after.channel.id]
-        del edit_message_content_before[after.channel.id]
+        try:
+            edit_message_author[after.channel.id] = after.author
+            edit_message_content_before[after.channel.id] = after.content
+            edit_message_content_after[after.channel.id] = before.content
+            await asyncio.sleep(60)
+            del edit_message_author[after.channel.id]
+            del edit_message_content_after[after.channel.id]
+            del edit_message_content_before[after.channel.id]
 
-      except KeyError:
-        return
+        except KeyError:
+            return
     
     @commands.command(help='Snipes the last edited message from a channel')
     @commands.cooldown(1,5,commands.BucketType.user)
     async def editsnipe(self, ctx):
-      channel = ctx.channel
-      try:
+        channel = ctx.channel
+        try:
             em = discord.Embed(
                 title=f"From {edit_message_author[channel.id]}",
                 description=
@@ -229,59 +224,56 @@ class Fun(commands.Cog):
             del edit_message_content_after[channel.id]
             del edit_message_content_before[channel.id]
             del edit_message_author[channel.id]
-      except:
-            await ctx.send(f"**No edited message to snipe**")
+        except:
+            await ctx.send("**No edited message to snipe**")
 
 
     @commands.command(help='Makes a poll people can vote on', usage='<flags | title: | question: | question2: | question3: | question4: | question5:>')
     @commands.cooldown(1,5,commands.BucketType.user)
-    async def poll(self, ctx, *, args:PollBuilder):
-      if not PollBuilder:
-        return await ctx.send("**<:red_cross:844165297538727956> | You need to provide a question!**")
-      
-      if not args.question2:
-        embed = discord.Embed(title=f"{args.title}", description=f"**{args.question}**\n\n:thumbsup:- **Yes** \n\n:thumbsdown:- **No**", color=discord.Color.random())
-        embed.set_footer(text=f" | Poll Created By {ctx.author.name}", icon_url=ctx.author.avatar.url)
-        msg = await ctx.send(embed=embed)
-        await msg.add_reaction('👍')
-        await msg.add_reaction('👎') 
+    async def poll(self, ctx, *, args: PollBuilder):
+        if not PollBuilder:
+            return await ctx.send("**<:red_cross:844165297538727956> | You need to provide a question!**")
 
-      elif args.question2 and not args.question3 and not args.question4 and not args.question5:
-        embed = discord.Embed(title=args.title, description=f"**{args.question}** - **1️⃣** \n\n**{args.question2}** - **2️⃣**", color=discord.Color.random())
-        embed.set_footer(text=f" | Poll Created By {ctx.author.name}", icon_url=ctx.author.avatar.url)
-        msg = await ctx.send(embed=embed)
-        await msg.add_reaction('1️⃣')
-        await msg.add_reaction('2️⃣') 
+        if not args.question2:
+            embed = discord.Embed(title=f"{args.title}", description=f"**{args.question}**\n\n:thumbsup:- **Yes** \n\n:thumbsdown:- **No**", color=discord.Color.random())
+            embed.set_footer(text=f" | Poll Created By {ctx.author.name}", icon_url=ctx.author.avatar.url)
+            msg = await ctx.send(embed=embed)
+            await msg.add_reaction('👍')
+            await msg.add_reaction('👎')
 
-      elif args.question2 and args.question3 and not args.question4 and not args.question5:
-        embed = discord.Embed(title=args.title, description=f"**{args.question}** - **1️⃣** \n\n**{args.question2}** - **2️⃣**\n\n**{args.question3}** - **3️⃣**", color=discord.Color.random())
-        embed.set_footer(text=f" | Poll Created By {ctx.author.name}", icon_url=ctx.author.avatar.url)
-        msg = await ctx.send(embed=embed)
-        await msg.add_reaction('1️⃣')
-        await msg.add_reaction('2️⃣') 
-        await msg.add_reaction("3️⃣")
+        elif args.question2 and not args.question3 and not args.question4 and not args.question5:
+            embed = discord.Embed(title=args.title, description=f"**{args.question}** - **1️⃣** \n\n**{args.question2}** - **2️⃣**", color=discord.Color.random())
+            embed.set_footer(text=f" | Poll Created By {ctx.author.name}", icon_url=ctx.author.avatar.url)
+            msg = await ctx.send(embed=embed)
+            await msg.add_reaction('1️⃣')
+            await msg.add_reaction('2️⃣')
 
-      elif args.question2 and args.question3 and args.question4 and not args.question5:
-        embed = discord.Embed(title=args.title, description=f"**{args.question}** - **1️⃣** \n\n**{args.question2}** - **2️⃣**\n\n**{args.question3}** - **3️⃣**\n\n**{args.question4}** -**4️⃣**", color=discord.Color.random())
-        embed.set_footer(text=f" | Poll Created By {ctx.author.name}", icon_url=ctx.author.avatar.url)
-        msg = await ctx.send(embed=embed)
-        await msg.add_reaction('1️⃣')
-        await msg.add_reaction('2️⃣') 
-        await msg.add_reaction("3️⃣")
-        await msg.add_reaction("4️⃣")
+        elif args.question2 and args.question3 and not args.question4 and not args.question5:
+            embed = discord.Embed(title=args.title, description=f"**{args.question}** - **1️⃣** \n\n**{args.question2}** - **2️⃣**\n\n**{args.question3}** - **3️⃣**", color=discord.Color.random())
+            embed.set_footer(text=f" | Poll Created By {ctx.author.name}", icon_url=ctx.author.avatar.url)
+            msg = await ctx.send(embed=embed)
+            await msg.add_reaction('1️⃣')
+            await msg.add_reaction('2️⃣')
+            await msg.add_reaction("3️⃣")
 
-      elif args.question2 and args.question3 and args.question4 and args.question5:
-        embed = discord.Embed(title=args.title, description=f"**{args.question}** - **1️⃣** \n\n**{args.question}** - **2️⃣**\n\n**{args.question3}** - **3️⃣**\n\n**{args.question4}** -**4️⃣**\n\n**{args.question5}** -**5️⃣**", color=discord.Color.random())
-        embed.set_footer(text=f" | Poll Created By {ctx.author.name}", icon_url=ctx.author.avatar.url)
-        msg = await ctx.send(embed=embed)
-        await msg.add_reaction('1️⃣')
-        await msg.add_reaction('2️⃣') 
-        await msg.add_reaction("3️⃣")
-        await msg.add_reaction("4️⃣")
-        await msg.add_reaction("5️⃣")
-    
+        elif args.question2 and args.question3 and args.question4 and not args.question5:
+            embed = discord.Embed(title=args.title, description=f"**{args.question}** - **1️⃣** \n\n**{args.question2}** - **2️⃣**\n\n**{args.question3}** - **3️⃣**\n\n**{args.question4}** -**4️⃣**", color=discord.Color.random())
+            embed.set_footer(text=f" | Poll Created By {ctx.author.name}", icon_url=ctx.author.avatar.url)
+            msg = await ctx.send(embed=embed)
+            await msg.add_reaction('1️⃣')
+            await msg.add_reaction('2️⃣')
+            await msg.add_reaction("3️⃣")
+            await msg.add_reaction("4️⃣")
 
-
+        elif args.question2 and args.question3 and args.question4 and args.question5:
+            embed = discord.Embed(title=args.title, description=f"**{args.question}** - **1️⃣** \n\n**{args.question}** - **2️⃣**\n\n**{args.question3}** - **3️⃣**\n\n**{args.question4}** -**4️⃣**\n\n**{args.question5}** -**5️⃣**", color=discord.Color.random())
+            embed.set_footer(text=f" | Poll Created By {ctx.author.name}", icon_url=ctx.author.avatar.url)
+            msg = await ctx.send(embed=embed)
+            await msg.add_reaction('1️⃣')
+            await msg.add_reaction('2️⃣') 
+            await msg.add_reaction("3️⃣")
+            await msg.add_reaction("4️⃣")
+            await msg.add_reaction("5️⃣")
 
     @commands.command(help='Makes a embed, to use this command use the following flags after the command like this: title:<title> description:<description> color:<color(can be a hex code or a normal color(eg. green))> author:<Author (this flag is optional)> field:<feild name (this flag is optional)> value: <value of the field (this flag is optional)> ')
     @commands.cooldown(1,5,commands.BucketType.user)
@@ -360,113 +352,112 @@ class Fun(commands.Cog):
     @commands.command(name="8ball", help='Lets the bot decide on something')
     @commands.cooldown(1,5,commands.BucketType.user)
     async def eightball(self, ctx, *, question=None):
+        if question is None:
+            return await ctx.send("**<:seriously_what:848469841534517248> You need to provide a question what are you doing right now!**")
 
-      if question == None:
-       return await ctx.send("**<:seriously_what:848469841534517248> You need to provide a question what are you doing right now!**")
-
-      choices = ['Definitely' ,'Yes.', 'Most Likely', 'Of Course', 'Doubtful', 'I cannot tell you right now', 'Maybe', 'Not 100% Sure', 'Kinda..', 'Duh, no', 'Nope!', 'How did you think, yes?', 'nonononono']
-      responce = random.choice(choices)
-      await ctx.reply(f":8ball: {responce}", mention_author=False)
+        choices = ['Definitely' ,'Yes.', 'Most Likely', 'Of Course', 'Doubtful', 'I cannot tell you right now', 'Maybe', 'Not 100% Sure', 'Kinda..', 'Duh, no', 'Nope!', 'How did you think, yes?', 'nonononono']
+        responce = random.choice(choices)
+        await ctx.reply(f":8ball: {responce}", mention_author=False)
 
     @commands.command(help='Ship\'s two members, the second member argument is not required and will automaticly be yourself')
     @commands.cooldown(1,5,commands.BucketType.user)
     async def ship(self, ctx, member1: discord.Member = None, member2: discord.Member = None):
 
-      if member1 == None:
-        return await ctx.send("**<:red_cross:844165297538727956> | Please Provide any 2 or 1 member(s) to ship!**")
+        if member1 is None:
+            return await ctx.send("**<:red_cross:844165297538727956> | Please Provide any 2 or 1 member(s) to ship!**")
 
-      elif member1 == member2:
-        return await ctx.send("**<:red_cross:844165297538727956> | Member1 can't be Member2, Please Provide another member to ship!**")
-      
-      elif member2 == None:
-        if member1 == ctx.author:
-          return await ctx.send('**<:red_cross:844165297538727956> | You cannot ship yourself**')
-        else:
-            member2 = ctx.author
+        elif member1 == member2:
+            return await ctx.send("**<:red_cross:844165297538727956> | Member1 can't be Member2, Please Provide another member to ship!**")
 
-      hearts = [':sparkling_heart:', ':heart:', ':heart_decoration:', ':hearts:']
-      heartchoice = random.choice(hearts)
-      num = random.randint(1, 100)
-      len1 = len(member1.name) // 2
-      len2 = len(member2.name) // 2 
-      half1 = member1.name[len1:]
-      half2 = member2.name[0:len2]
+        elif member2 is None:
+            if member1 == ctx.author:
+                return await ctx.send('**<:red_cross:844165297538727956> | You cannot ship yourself**')
+            else:
+                member2 = ctx.author
 
-      colors = [0xff00c1, 0xff7fe0, 0xff61b3, 0xd521ff]
-      cchoice = random.choice(colors)
+        hearts = [':sparkling_heart:', ':heart:', ':heart_decoration:', ':hearts:']
+        heartchoice = random.choice(hearts)
+        num = random.randint(1, 100)
+        len1 = len(member1.name) // 2
+        len2 = len(member2.name) // 2 
+        half1 = member1.name[len1:]
+        half2 = member2.name[0:len2]
 
-      options = ['Married', 'not Married', 'in a Relationship', 'Broken Up', 'Just Friends']
-      optionchoice = random.choice(options)
-      embed = discord.Embed(title=f"{heartchoice} Rate: {num}% ", description=f"**{member1.name}** and **{member2.name}** are __**{optionchoice}**__", color=cchoice)
-      embed.set_author(name=f"{member2.name} + {member1.name} = {half2}{half1}")
-      await ctx.send(embed=embed)
+        colors = [0xff00c1, 0xff7fe0, 0xff61b3, 0xd521ff]
+        cchoice = random.choice(colors)
+
+        options = ['Married', 'not Married', 'in a Relationship', 'Broken Up', 'Just Friends']
+        optionchoice = random.choice(options)
+        embed = discord.Embed(title=f"{heartchoice} Rate: {num}% ", description=f"**{member1.name}** and **{member2.name}** are __**{optionchoice}**__", color=cchoice)
+        embed.set_author(name=f"{member2.name} + {member1.name} = {half2}{half1}")
+        await ctx.send(embed=embed)
       
 
     @commands.command(help='Gets the first message from the channel')
     @commands.cooldown(1,15,commands.BucketType.guild)
     async def firstmessage(self, ctx):
-      async for message in ctx.channel.history(oldest_first=True, limit=1):
-        url = message.jump_url
-        embed = discord.Embed(title=message.content, description=f"**Link: {url}**",color=discord.Color.random())
-        embed.set_author(name=f"{message.author.name} said...", icon_url=message.author.avatar.url)
-        embed.add_field(name='Sent at', value=discord.utils.format_dt(message.created_at))
-        embed.set_footer(text=f'| Requested by {ctx.author}', icon_url=ctx.author.avatar.url)
-        await message.reply(embed=embed, mention_author=False)
+        async for message in ctx.channel.history(oldest_first=True, limit=1):
+            url = message.jump_url
+            embed = discord.Embed(title=message.content, description=f"**Link: {url}**",color=discord.Color.random())
+            embed.set_author(name=f"{message.author.name} said...", icon_url=message.author.avatar.url)
+            embed.add_field(name='Sent at', value=discord.utils.format_dt(message.created_at))
+            embed.set_footer(text=f'| Requested by {ctx.author}', icon_url=ctx.author.avatar.url)
+            await message.reply(embed=embed, mention_author=False)
 
     @commands.command(help='Does a *very real* hack to a member')
     @commands.cooldown(1,5,commands.BucketType.user)
-    async def hack(self, ctx, member:discord.Member):
-     if member == None:
-      return await ctx.send("**Srsly you need to provide the member to hack because you cant hack yourself right??**")
-     elif member == ctx.author:
-      return await ctx.send("**Done hacked you, who next?**")
-     domains = ['@gmail.com', '@outlook.com', '@69mail.com', '@hotmail.com', '@kyrop.com']
-     domain = random.choice(domains)
-     words = ['oop', 'ye', 'bad', 'i hate you', 'whoops', 'il nuke you', 'thicc']
-     word = random.choice(words)
-     revenue = random.randint(1,90000)
-     locations = ['Asia', 'Europe', 'Mars ||wait what||', 'Australia ||k!flip||']
-     location = random.choice(locations)
-     color = 0x16C60C 
-     embed = discord.Embed(description='[▗] Hacking now..', color=color)
-     m = await ctx.send(embed=embed)
-     await asyncio.sleep(5)
-     embed = discord.Embed(description='[▗] Getting Access...', color=color)
-     await m.edit(embed=embed)
-     await asyncio.sleep(5)
-     embed = discord.Embed(description='[▗] Getting email and password..', color=color)
-     await m.edit(embed=embed)
-     await asyncio.sleep(5)
-     embed = discord.Embed(description=f'Email: {member.name}{domain}', color=color)
-     await m.edit(embed=embed)
-     await asyncio.sleep(5)
-     embed = discord.Embed(description='[▗] Gettings DM\'s', color=color)
-     await m.edit(embed=embed)
-     await asyncio.sleep(5)
-     embed = discord.Embed(description=f'DM\'s Found.. Most common word: {word}', color=color)
-     await m.edit(embed=embed)
-     await asyncio.sleep(5)
-     embed = discord.Embed(description='[▗] Getting IP Address', color=color)
-     await m.edit(embed=embed)
-     await asyncio.sleep(5)
-     embed = discord.Embed(description=f'IP Address Location found: {location}', color=color)
-     await m.edit(embed=embed)
-     await asyncio.sleep(5)
-     embed = discord.Embed(description='[▗] Selling data to 3rd parties', color=color)
-     await m.edit(embed=embed)
-     await asyncio.sleep(5)
-     if revenue > 10000:
-       embed = discord.Embed(description=f'Data sold and made **{revenue}$**, thats some good money', color=color)
-       await m.edit(embed=embed)
-     else:
-       embed = discord.Embed(description=f'Data sold and made **{revenue}$**, smh thats not alot of money', color=color)
-       await m.edit(embed=embed)
-     await asyncio.sleep(5.9)
-     embed = discord.Embed(description='[▗] Finalizing the hack...', color=color)
-     await m.edit(embed=embed)
-     await asyncio.sleep(5)
-     embed = discord.Embed(description=f'This very *real* hack to {member.name} has finished!', color=color)
-     await m.edit(embed=embed)
+    async def hack(self, ctx, member: discord.Member):
+        if member is None:
+            return await ctx.send("**Srsly you need to provide the member to hack because you cant hack yourself right??**")
+        elif member == ctx.author:
+            return await ctx.send("**Done hacked you, who next?**")
+        domains = ['@gmail.com', '@outlook.com', '@69mail.com', '@hotmail.com', '@kyrop.com']
+        domain = random.choice(domains)
+        words = ['oop', 'ye', 'bad', 'i hate you', 'whoops', 'il nuke you', 'thicc']
+        word = random.choice(words)
+        revenue = random.randint(1,90000)
+        locations = ['Asia', 'Europe', 'Mars ||wait what||', 'Australia ||k!flip||']
+        location = random.choice(locations)
+        color = 0x16C60C 
+        embed = discord.Embed(description='[▗] Hacking now..', color=color)
+        m = await ctx.send(embed=embed)
+        await asyncio.sleep(5)
+        embed = discord.Embed(description='[▗] Getting Access...', color=color)
+        await m.edit(embed=embed)
+        await asyncio.sleep(5)
+        embed = discord.Embed(description='[▗] Getting email and password..', color=color)
+        await m.edit(embed=embed)
+        await asyncio.sleep(5)
+        embed = discord.Embed(description=f'Email: {member.name}{domain}', color=color)
+        await m.edit(embed=embed)
+        await asyncio.sleep(5)
+        embed = discord.Embed(description='[▗] Gettings DM\'s', color=color)
+        await m.edit(embed=embed)
+        await asyncio.sleep(5)
+        embed = discord.Embed(description=f'DM\'s Found.. Most common word: {word}', color=color)
+        await m.edit(embed=embed)
+        await asyncio.sleep(5)
+        embed = discord.Embed(description='[▗] Getting IP Address', color=color)
+        await m.edit(embed=embed)
+        await asyncio.sleep(5)
+        embed = discord.Embed(description=f'IP Address Location found: {location}', color=color)
+        await m.edit(embed=embed)
+        await asyncio.sleep(5)
+        embed = discord.Embed(description='[▗] Selling data to 3rd parties', color=color)
+        await m.edit(embed=embed)
+        await asyncio.sleep(5)
+        if revenue > 10000:
+            embed = discord.Embed(description=f'Data sold and made **{revenue}$**, thats some good money', color=color)
+            await m.edit(embed=embed)
+        else:
+            embed = discord.Embed(description=f'Data sold and made **{revenue}$**, smh thats not alot of money', color=color)
+            await m.edit(embed=embed)
+            await asyncio.sleep(5.9)
+            embed = discord.Embed(description='[▗] Finalizing the hack...', color=color)
+            await m.edit(embed=embed)
+            await asyncio.sleep(5)
+            embed = discord.Embed(description=f'This very *real* hack to {member.name} has finished!', color=color)
+            await m.edit(embed=embed)
         
     # @commands.command()
     # @commands.cooldown(1,5,commands.BucketType.user)

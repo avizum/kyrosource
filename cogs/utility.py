@@ -104,25 +104,24 @@ class Utility(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, msg):
         pass
-   
 
     @commands.command(help='Gets the bot\'s delay from discord.')
     @commands.cooldown(1,5,commands.BucketType.user)
     async def ping(self, ctx):
-      start = time.perf_counter()
-      em = discord.Embed(description="**🏓 Calculating Bot's Latency...**")
-      msg = await ctx.reply(embed=em, mention_author=False)
-      end = time.perf_counter()
-      duration = (end - start) * 1000
-      poststart = time.perf_counter()
-      await self.bot.db.fetch("SELECT 1")
-      postduration = (time.perf_counter()-poststart) * 1000
-      db_ping = round(postduration, 2)
-      embed = discord.Embed(title='**🏓 Pong**', color=0x2F3136)
-      embed.add_field(name='**Websocket**', value=f'```py\n{round(self.bot.latency* 1000,2)} ms\n```', inline=True)
-      embed.add_field(name='**Typing**', value="```py\n{:.2f} ms\n```".format(round(duration)), inline=True)
-      embed.add_field(name='**Database**', value=f"```py\n{db_ping} ms\n```", inline=True)
-      await msg.edit(embed=embed, allowed_mentions=discord.AllowedMentions.none())
+        start = time.perf_counter()
+        em = discord.Embed(description="**🏓 Calculating Bot's Latency...**")
+        msg = await ctx.reply(embed=em, mention_author=False)
+        end = time.perf_counter()
+        duration = (end - start) * 1000
+        poststart = time.perf_counter()
+        await self.bot.db.fetch("SELECT 1")
+        postduration = (time.perf_counter()-poststart) * 1000
+        db_ping = round(postduration, 2)
+        embed = discord.Embed(title='**🏓 Pong**', color=0x2F3136)
+        embed.add_field(name='**Websocket**', value=f'```py\n{round(self.bot.latency* 1000,2)} ms\n```', inline=True)
+        embed.add_field(name='**Typing**', value="```py\n{:.2f} ms\n```".format(round(duration)), inline=True)
+        embed.add_field(name='**Database**', value=f"```py\n{db_ping} ms\n```", inline=True)
+        await msg.edit(embed=embed, allowed_mentions=discord.AllowedMentions.none())
 
     @commands.command(help="Get's the server's membercount")
     @commands.cooldown(1,5,commands.BucketType.user)
@@ -192,16 +191,15 @@ class Utility(commands.Cog):
         embed.set_footer(text=f"Server created on: {(str(ctx.guild.created_at.strftime('%Y-%m-%d %H:%M')))}")
         embed.set_image(url=banner)
         await ctx.send(embed=embed)
-        
-        
+
     @commands.command(help="Give's the server's icon")
     @commands.cooldown(1,5,commands.BucketType.user)
     async def servericon(self, ctx):
-      icon = str(ctx.guild.icon.url)
-      embed = discord.Embed(title=f'Icon for {ctx.guild.name}', color=discord.Color.random())
-      embed.set_image(url=icon)
-      await ctx.send(embed=embed)
-        
+        icon = str(ctx.guild.icon.url)
+        embed = discord.Embed(title=f'Icon for {ctx.guild.name}', color=discord.Color.random())
+        embed.set_image(url=icon)
+        await ctx.send(embed=embed)
+
     @commands.command(name='clear-my-data', help="Deletes your data from our database")
     @commands.cooldown(1,5,commands.BucketType.user)
     async def deletemydata(self,ctx):
@@ -210,7 +208,7 @@ class Utility(commands.Cog):
 #         reactions = ['✅', '❌']
 #         for reaction in reactions:
 #             await msg.add_reaction(reaction)
-        
+
 #         def check(reaction, user):
 #             return user == ctx.author and reaction.emoji in ['✅', '❌']
 #         try:
@@ -218,30 +216,28 @@ class Utility(commands.Cog):
 #         except asyncio.TimeoutError:
 #             timeoutembed = discord.Embed(title='Data Removal', description='Timed Out.', color=discord.Color.red())
 #             return await msg.edit(embed=timeoutembed)
-            
+
 #         if reaction.emoji == '✅':
         if confirm:
-                removing_time = await self.bot.db.execute("DELETE FROM times WHERE user_id = $1", ctx.author.id)
-                removing_economy = await self.bot.db.execute("DELETE FROM accounts WHERE user_id = $1", ctx.author.id)
-                em = discord.Embed(title='Data Removal', description='Your data has been removed.', color=discord.Color.red())
-                await ctx.send(embed=em)
+            removing_time = await self.bot.db.execute("DELETE FROM times WHERE user_id = $1", ctx.author.id)
+            removing_economy = await self.bot.db.execute("DELETE FROM accounts WHERE user_id = $1", ctx.author.id)
+            em = discord.Embed(title='Data Removal', description='Your data has been removed.', color=discord.Color.red())
+            await ctx.send(embed=em)
         else:
-                emb = discord.Embed(title='Data Removal', description='Aborted.', color=discord.Color.green())
-                return await ctx.send(embed=emb)
-        
-        
+            emb = discord.Embed(title='Data Removal', description='Aborted.', color=discord.Color.green())
+            return await ctx.send(embed=emb)
+
     @commands.command(help="Set's the bot's prefix for this server")
     @commands.guild_only()
     @commands.has_permissions(manage_guild=True)
     async def setprefix(self, ctx, prefix:str=None):
-      if prefix == None:
-        return await ctx.send("**<:red_cross:844165297538727956> | You have not specified a valid prefix for this command**")
-      elif len(prefix) > 5:
-        return await ctx.send("**<:red_cross:844165297538727956> | That prefix is too large! Make sure it's below 5 characters!**")
-      await self.bot.db.execute("UPDATE prefixes SET prefix = $1 WHERE guild_id = $2", prefix, ctx.guild.id)
-      await self.bot.cache.cache_all()
-      await ctx.send(f"**<a:animated_tick:847447732623900672> | Server prefix changed to `{prefix}`**")      
-
+        if prefix is None:
+            return await ctx.send("**<:red_cross:844165297538727956> | You have not specified a valid prefix for this command**")
+        elif len(prefix) > 5:
+            return await ctx.send("**<:red_cross:844165297538727956> | That prefix is too large! Make sure it's below 5 characters!**")
+        await self.bot.db.execute("UPDATE prefixes SET prefix = $1 WHERE guild_id = $2", prefix, ctx.guild.id)
+        await self.bot.cache.cache_all()
+        await ctx.send(f"**<a:animated_tick:847447732623900672> | Server prefix changed to `{prefix}`**")      
 
     @setprefix.error
     async def setprefix_error(self, ctx, error):
@@ -254,7 +250,7 @@ class Utility(commands.Cog):
     @commands.command(help="Get's information on the current channel, or a channel mentioned")
     @commands.cooldown(1,5,commands.BucketType.user)
     async def channelstats(self, ctx, channel: discord.TextChannel=None):
-        if channel == None:
+        if channel is None:
             channel = ctx.channel
 
         embed = discord.Embed(
@@ -391,10 +387,10 @@ class Utility(commands.Cog):
     @commands.cooldown(1,5,commands.BucketType.user)
     @commands.has_permissions(manage_emojis=True)
     async def upload_emoji(self, ctx,  emoji: discord.PartialEmoji = None, name = None):
-        if emoji == None:
+        if emoji is None:
           return await ctx.reply("**<:red_cross:844165297538727956> | You need to provide a valid emoji!**", mention_author=False)
         try:
-            if name == None:
+            if name is None:
                 name = emoji.name
             guild = ctx.guild
             async with aiohttp.ClientSession() as ses:
@@ -473,7 +469,7 @@ class Utility(commands.Cog):
             await ctx.reply("**You need to provide the time in s, m, h (ex. 10s, 20m)** ||and make sure its not negative||", mention_author=False)
         elif t == -2:
             await ctx.reply("**You didnt enter a number properly... Try again next time with a number!**", mention_author=False)
-        elif reason == None:
+        elif reason is None:
             await ctx.reply("**You need to provide a reason for your reminder after the time...**", mention_author=False)
         else:
             if dm is True:
@@ -492,7 +488,7 @@ class Utility(commands.Cog):
     @commands.command(name='bug-report', help="Report's a bug to Kyro's developer")
     @commands.cooldown(1,5,commands.BucketType.user)
     async def report(self, ctx, *, bug=None):
-            if bug == None:
+            if bug is None:
                 return await ctx.send("**<:red_cross:844165297538727956> | Provide a bug to report!**")
             guild = ctx.guild
             channels = self.bot.get_all_channels()
@@ -736,7 +732,7 @@ class Utility(commands.Cog):
     @commands.command(help="Give's you weather info on a city")
     @commands.cooldown(1,5,commands.BucketType.user)
     async def weather(self, ctx,  *, city=None):
-      if city == None:
+      if city is None:
         return await ctx.reply('**<:red_cross:844165297538727956> | You need to provide a city!**', mention_author=False)
       try: 
         key = objects["WEATHER_API_KEY"]
@@ -769,7 +765,7 @@ class Utility(commands.Cog):
 
     @covid.group(help= 'Gets information of Covid-19 stats of a country')
     async def country(self, ctx, country1=None):
-       if country1 == None:
+       if country1 is None:
          return await ctx.reply('**<:red_cross:844165297538727956> | You need to Provide a valid country!`**')
        url = f'https://disease.sh/v3/covid-19/countries/{country1}'
        async with ClientSession() as session:
@@ -906,7 +902,7 @@ class Utility(commands.Cog):
 
     @covid.group(help= 'Gets Summary of a continent with Covid-19')
     async def continent(self, ctx, continent=None):
-      if continent == None:
+      if continent is None:
          return await ctx.reply('**<:red_cross:844165297538727956> | You need to provide a valid continent`**')
       url = f'https://disease.sh/v3/covid-19/continents/{continent}'
       async with ClientSession() as session:

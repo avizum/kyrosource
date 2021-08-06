@@ -17,7 +17,7 @@ def convert(time):
 
 class Giveaway(commands.Cog):
     def __init__(self, bot):
-      self.bot = bot
+        self.bot = bot
 
     def can_use_giveaways():
         async def predicate(ctx):
@@ -25,16 +25,14 @@ class Giveaway(commands.Cog):
                 role.name.lower() for role in ctx.author.roles
             ):
                 return True
-
-            else:
-                await ctx.send("**You either need `giveaways` role or `manage server` permissions to use this command!**")
-                return False
+            await ctx.send("**You either need `giveaways` role or `manage server` permissions to use this command!**")
+            return False
 
         return commands.check(predicate)
-    
-    @commands.Cog.listener()
+
+    @commands.Cog.listener()  # What is this for!?!?!!??
     async def on_message(self, message):
-      return
+        return
 
 def setup(bot):
     bot.add_cog(Giveaway(bot))

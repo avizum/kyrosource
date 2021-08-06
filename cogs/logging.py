@@ -29,7 +29,7 @@ class Logging(commands.Cog):
         chann = await self.bot.db.fetch("SELECT channel FROM logs WHERE guild_id = $1", ctx.guild.id)
         if not chann:
             if not channel in ctx.guild.channels:
-                embed = discord.Embed(description=f"<a:incorrect:854800103193182249> Cannot find this channel, make sure i have access to that channel.", color=discord.Color.red())
+                embed = discord.Embed(description="<a:incorrect:854800103193182249> Cannot find this channel, make sure i have access to that channel.", color=discord.Color.red())
                 return await ctx.send(embed=embed)
             else:
                 adding = await self.bot.db.execute("INSERT INTO logs (channel, guild_id) VALUES ($1, $2)", int(channel.id), ctx.guild.id)
@@ -47,7 +47,7 @@ class Logging(commands.Cog):
     @commands.has_permissions(manage_guild=True)
     async def tologs(self, ctx):
         removing = await self.bot.db.execute("DELETE FROM logs WHERE guild_id = $1", ctx.guild.id)
-        embed = discord.Embed(description=f"**<:green_tick:844165352610725898> Removed logs channel.**", color=discord.Color.green())
+        embed = discord.Embed(description="**<:green_tick:844165352610725898> Removed logs channel.**", color=discord.Color.green())
         await ctx.reply(embed=embed)
 
 

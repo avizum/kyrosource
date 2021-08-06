@@ -20,21 +20,20 @@ class Jishaku(*OPTIONAL_FEATURES, *STANDARD_FEATURES):
         proc = psutil.Process()
         with proc.oneshot():
             try:
-                 mem = proc.memory_full_info()
-                 summary.append(
+                mem = proc.memory_full_info()
+                summary.append(
                     f"Using {humanize.naturalsize(mem.rss)} physical memory and "
                     f"{humanize.naturalsize(mem.vms)} virtual memory, "
                     f"{humanize.naturalsize(mem.uss)} of which is unique this this process."
                 )
             except psutil.AccessDenied:
                 pass
-
             try:
-                 name = proc.name()
-                 pid = proc.pid
-                 thread_count = proc.num_threads()
-                 summary.append(
-                        f"Running on PID {pid} ({name}) with {thread_count} thread(s)")
+                name = proc.name()
+                pid = proc.pid
+                thread_count = proc.num_threads()
+                summary.append(
+                    f"Running on PID {pid} ({name}) with {thread_count} thread(s)")
             except psutil.AccessDenied:
                 pass
             summary.append("")
@@ -54,7 +53,6 @@ class Jishaku(*OPTIONAL_FEATURES, *STANDARD_FEATURES):
         members_intent = f"members {'enabled' if self.bot.intents.members else 'disabled'}"
         summary.append(f"Intents: {presence_intent} and {members_intent}")
         summary.append("")
-
 
         embed = discord.Embed(description="\n".join(summary), color=0x2F3136)
         embed.set_author(name='Jishaku', icon_url=ctx.me.avatar.url)
