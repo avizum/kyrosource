@@ -659,7 +659,7 @@ class Images(commands.Cog):
     async def invert(self, ctx, member:typing.Union[discord.Member, discord.PartialEmoji, discord.Emoji]=None):
         if member is None:
             member = ctx.author
-        url = await getImage(ctx. member)
+        url = await getImage(ctx, member)
         async with Processing(ctx):
             img = await dagpi.image_process(asyncdagpi.ImageFeatures.invert(), url=url)
             file = discord.File(fp=img.image, filename=f'{ctx.command.name}.{img.format}')
