@@ -302,6 +302,13 @@ class Utility(commands.Cog):
         embed = discord.Embed(description='[Click to vote on top.gg](https://top.gg/bot/844154929815748649/vote)\n\n[Cick to vote on discordbotlist.com](https://discordbotlist.com/bots/kyro/upvote)' ,color=discord.Color.random())
         await ctx.send(embed=embed)
         
+    @commands.command(help="Give's you the link to the source for Kyro")
+    @commands.cooldown(1,5,commands.BucketType.user)
+    async def source(self, ctx):
+        embed = discord.Embed(description='To view my source, click [here](https://github.com/someone782/kyrosource)' ,color=discord.Color.random())
+        await ctx.send(embed=embed)    
+    
+        
     @commands.command(help="Marks you as AFK, people mentioning you will get a message that you are AFK")
     @commands.cooldown(1,5,commands.BucketType.user)
     async def afk(self,ctx,*, reason:str=None):
